@@ -9,9 +9,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./OCRScan.Frontend:/app
       - /app/node_modules
-      - /app/.next
 
   ocrscan-backend:
     container_name: ocrscan-backend
@@ -21,9 +19,7 @@ services:
     ports:
       - 5555:5555
     volumes:
-      - ./OCRScan.Backend:/app
       - /app/node_modules
-      - /app/dist
     depends_on:
       - ocrscan-db
 

@@ -21,14 +21,17 @@ export class OcrController {
   @Post('/imgToPdf')
   @UseInterceptors(FileInterceptor('img'))
   async imgToPdf(
-    @Req() request: Request,
+    @Req() req: Request,
     @UploadedFile() img: Express.Multer.File,
     @Res() res: Response,
   ) {
-    const buffer = await this.ocrService.imgToPdf(img.buffer)
+    const buffer = await this.ocrService.imgToPdf(
+      img.buffer,
+      JSON.parse(req.cookies['languages']),
+    )
     const stream = this.fileService.getReadableStream(buffer)
 
-    console.log(request.cookies)
+    console.log(req.cookies)
 
     res.set({
       'Content-Type': 'application/pdf',
