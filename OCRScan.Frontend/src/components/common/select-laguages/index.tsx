@@ -22,7 +22,7 @@ const options: IOption[] = [
 export const SelectLanguages: FC = (): ReactElement => {
   const {
     control,
-    formState: { isSubmitted, errors },
+    formState: { isSubmitting, errors },
   } = useFormContext()
 
   const { field } = useController({ name: 'languages', control })
@@ -32,7 +32,7 @@ export const SelectLanguages: FC = (): ReactElement => {
       const langCodes = field.value.map((option: IOption) => option.langCode)
       Cookies.set('languages', JSON.stringify(langCodes))
     }
-  }, [isSubmitted])
+  }, [isSubmitting])
 
   const onAutocompleteChange = (event: SyntheticEvent, value: IOption[]) => {
     field.onChange(value)

@@ -23,6 +23,7 @@ services:
     volumes:
       - ./OCRScan.Backend:/app
       - /app/node_modules
+      - /app/dist
     depends_on:
       - ocrscan-db
 
