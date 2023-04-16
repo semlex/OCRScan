@@ -1,13 +1,13 @@
-import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
-import { User } from './users/user.model';
-import { AutomapperModule } from '@automapper/nestjs';
-import { sequelize } from '@automapper/sequelize';
-import { OcrModule } from './ocr/ocr.module';
-import { FileModule } from './file/file.module';
+import { Module } from '@nestjs/common'
+import { UsersModule } from './users/users.module'
+import { SequelizeModule } from '@nestjs/sequelize'
+import { ConfigModule } from '@nestjs/config'
+import { AuthModule } from './auth/auth.module'
+import { User } from './users/user.model'
+import { AutomapperModule } from '@automapper/nestjs'
+import { sequelize } from '@automapper/sequelize'
+import { OcrModule } from './ocr/ocr.module'
+import { FileModule } from './file/file.module'
 
 @Module({
   imports: [

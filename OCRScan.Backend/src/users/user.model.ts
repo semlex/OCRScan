@@ -1,15 +1,10 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
-} from 'sequelize-typescript';
-import { Exclude, Expose } from 'class-transformer';
-import { AutoMap } from '@automapper/classes';
+import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { Exclude } from 'class-transformer'
+import { AutoMap } from '@automapper/classes'
 
 interface IUserCreationCreationAttrs {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 @Table({ tableName: 'users' })
@@ -21,7 +16,7 @@ export class User extends Model<User, IUserCreationCreationAttrs> {
     autoIncrement: true,
     primaryKey: true,
   })
-  id: number;
+  id: number
 
   @Column({
     type: DataType.STRING,
@@ -29,19 +24,19 @@ export class User extends Model<User, IUserCreationCreationAttrs> {
     allowNull: false,
   })
   @AutoMap()
-  email: string;
+  email: string
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   @Exclude()
-  password: string;
+  password: string
 
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
   @Exclude()
-  refreshToken?: string;
+  refreshToken?: string
 }
