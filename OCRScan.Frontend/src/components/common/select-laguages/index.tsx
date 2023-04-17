@@ -29,9 +29,7 @@ export const SelectLanguages: FC = (): ReactElement => {
 
   useEffect(() => {
     if (field.value) {
-      const langCodes = field.value.map((option: IOption) => ({
-        code: option.code,
-      }))
+      const langCodes = field.value.map((option: IOption) => option.code)
       Cookies.set('languages', JSON.stringify(langCodes))
     }
   }, [isSubmitting])
