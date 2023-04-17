@@ -4,17 +4,17 @@ import { Controller, useController, useFormContext } from 'react-hook-form'
 import { Autocomplete, FormHelperText, TextField } from '@mui/material'
 
 interface IOption {
-  langCode: string
+  code: string
   title: string
 }
 
 const options: IOption[] = [
   {
-    langCode: 'rus',
+    code: 'rus',
     title: 'Русский',
   },
   {
-    langCode: 'eng',
+    code: 'eng',
     title: 'Английский',
   },
 ]
@@ -29,7 +29,9 @@ export const SelectLanguages: FC = (): ReactElement => {
 
   useEffect(() => {
     if (field.value) {
-      const langCodes = field.value.map((option: IOption) => option.langCode)
+      const langCodes = field.value.map((option: IOption) => ({
+        code: option.code,
+      }))
       Cookies.set('languages', JSON.stringify(langCodes))
     }
   }, [isSubmitting])

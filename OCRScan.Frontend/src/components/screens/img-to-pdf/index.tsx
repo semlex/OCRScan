@@ -12,7 +12,7 @@ const imageUploadSchema = object({
   image: z.instanceof(File),
   languages: z
     .object({
-      langCode: z.string(),
+      code: z.string(),
       title: z.string(),
     })
     .array()
