@@ -3,7 +3,7 @@ import { FileResponse } from '@/api/types'
 
 export const endpoints = {
   ocr: {
-    imgToPdf: (data: FormData): Promise<FileResponse> =>
-      Axios.post('/ocr/imgToPdf', data, { responseType: 'blob' }),
+    imgToPdf: (payload: FormData): Promise<FileResponse> =>
+      Axios.post('/ocr/imgToPdf', payload, { responseType: 'blob' }),
   },
 }

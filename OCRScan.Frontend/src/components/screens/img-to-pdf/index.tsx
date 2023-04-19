@@ -1,12 +1,12 @@
 import React, { FC, ReactElement, useEffect } from 'react'
-import { saveAs } from 'file-saver'
-import { Box, Button, Container, Grid } from '@mui/material'
+import { useAppSelector, useAppDispatch } from '@/hooks/redux'
+import { Box, Button, CircularProgress, Container, Grid } from '@mui/material'
 import { FileUpload } from '@/components/common/file-upload'
 import { TypeOf, object, z } from 'zod'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { endpoints } from '@/api/endpoints'
 import { SelectLanguages } from '@/components/common/select-laguages'
+import { imgToPdf } from '@/store/ocr/ocr.actions'
 
 const imageUploadSchema = object({
   image: z.instanceof(File),
@@ -26,6 +26,9 @@ const ImgToPdf: FC = (): ReactElement => {
     resolver: zodResolver(imageUploadSchema),
   })
 
+  const isLoading = useAppSelector((state) => state.ocr.isLoading)
+  const dispatch = useAppDispatch()
+
   useEffect(() => {
     console.log(methods.getValues())
     console.log(methods.formState.errors)
@@ -35,28 +38,41 @@ const ImgToPdf: FC = (): ReactElement => {
     const formData = new FormData()
     formData.append('img', values.image)
 
-    endpoints.ocr.imgToPdf(formData).then((r) => saveAs(r.data, 'result.pdf'))
+    dispatch(imgToPdf(formData))
   }
 
   return (
     <Container sx={{ paddingY: '20px' }}>
-      <FormProvider {...methods}>
-        <Box component="form" onSubmit={methods.handleSubmit(onSubmit)}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <FileUpload name="image" multiple={false} limit={1} />
+      {!isLoading ? (
+        <FormProvider {...methods}>
+          <Box component="form" onSubmit={methods.handleSubmit(onSubmit)}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FileUpload name="image" multiple={false} limit={1} />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <SelectLanguages />
+              </Grid>
+              <Grid item xs={12}>
+                <Button variant="contained" type="submit">
+                  Старт
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6}>
-              <SelectLanguages />
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant="contained" type="submit">
-                Старт
-              </Button>
-            </Grid>
+          </Box>
+        </FormProvider>
+      ) : (
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          minHeight="50vh"
+        >
+          <Grid item>
+            <CircularProgress size={80} />
           </Grid>
-        </Box>
-      </FormProvider>
+        </Grid>
+      )}
     </Container>
   )
 }
