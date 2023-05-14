@@ -3,6 +3,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+RUN apk add --update --no-cache \
+    make \
+    g++ \
+    jpeg-dev \
+    cairo-dev \
+    giflib-dev \
+    pango-dev \
+    libtool \
+    autoconf \
+    automake
+
 COPY package*.json ./
 
 #RUN npm remove @u4/opencv4nodejs
