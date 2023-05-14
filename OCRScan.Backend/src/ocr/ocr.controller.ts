@@ -30,6 +30,7 @@ export class OcrController {
     const buffers = await this.ocrService.imgToPdf(
       img.map((img) => img.buffer),
       JSON.parse(req.cookies['languages']),
+      JSON.parse(req.cookies['filters']),
     )
 
     const buffer = await this.fileService.mergePdf(buffers)
@@ -53,6 +54,7 @@ export class OcrController {
     const text = await this.ocrService.imgToText(
       img.buffer,
       JSON.parse(req.cookies['languages']),
+      JSON.parse(req.cookies['filters']),
     )
     return {
       text,
@@ -69,6 +71,7 @@ export class OcrController {
     const buffers = await this.ocrService.makeReadablePdf(
       pdf.buffer,
       JSON.parse(req.cookies['languages']),
+      JSON.parse(req.cookies['filters']),
     )
 
     const buffer = await this.fileService.mergePdf(buffers)

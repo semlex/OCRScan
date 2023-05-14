@@ -6,22 +6,29 @@ import { convert } from 'pdf-img-convert'
 @Injectable()
 export class OcrService {
   constructor(private readonly imageService: ImageService) {}
-  async imgToPdf(imgBuffers: Buffer[], languages: string[]): Promise<Buffer[]> {
+  async imgToPdf(
+    imgBuffers: Buffer[],
+    languages: string[],
+    filters: boolean,
+  ): Promise<Buffer[]> {
     const worker = await createWorker({
       logger: (m) => console.log(m),
     })
 
     let file
     const pdfBuffs: Buffer[] = []
+    let imgBuff
 
     await (async () => {
       for (const imgBuffer of imgBuffers) {
-        const processedImgBuff = await this.imageService.preprocessImage(
-          imgBuffer,
-        )
+        if (filters) {
+          imgBuff = await this.imageService.preprocessImage(imgBuffer)
+        } else {
+          imgBuff = imgBuffer
+        }
         await worker.loadLanguage(languages.join('+'))
         await worker.initialize(languages.join('+'))
-        await worker.recognize(processedImgBuff)
+        await worker.recognize(imgBuff)
         file = (await worker.getPDF('result')).data
         pdfBuffs.push(Buffer.from(file))
       }
@@ -31,12 +38,22 @@ export class OcrService {
     return pdfBuffs
   }
 
-  async imgToText(imgBuffer: Buffer, languages: string[]): Promise<string> {
+  async imgToText(
+    imgBuffer: Buffer,
+    languages: string[],
+    filters: boolean,
+  ): Promise<string> {
     const worker = await createWorker({
       logger: (m) => console.log(m),
     })
 
-    const processedImgBuff = await this.imageService.preprocessImage(imgBuffer)
+    let imgBuff
+
+    if (filters) {
+      imgBuff = await this.imageService.preprocessImage(imgBuffer)
+    } else {
+      imgBuff = imgBuffer
+    }
 
     let result = ''
 
@@ -45,7 +62,7 @@ export class OcrService {
       await worker.initialize(languages.join('+'))
       const {
         data: { text },
-      } = await worker.recognize(processedImgBuff)
+      } = await worker.recognize(imgBuff)
       result = text
       await worker.terminate()
     })()
@@ -56,6 +73,7 @@ export class OcrService {
   async makeReadablePdf(
     pdfBuffer: Buffer,
     languages: string[],
+    filters: boolean,
   ): Promise<Buffer[]> {
     const worker = await createWorker({
       logger: (m) => console.log(m),
@@ -70,6 +88,7 @@ export class OcrService {
 
     let file
     const pdfBuffs: Buffer[] = []
+    let imgBuff
 
     await (async () => {
       await worker.loadLanguage(languages.join('+'))
@@ -79,8 +98,15 @@ export class OcrService {
         // const stream = await page.streamTextContent()
         // const data = await stream.getReader().read()
 
-        const imgBuffer = Buffer.from(image)
-        await worker.recognize(imgBuffer)
+        console.log(filters)
+
+        if (filters) {
+          imgBuff = await this.imageService.preprocessImage(Buffer.from(image))
+        } else {
+          imgBuff = Buffer.from(image)
+        }
+
+        await worker.recognize(imgBuff)
         file = (await worker.getPDF('result')).data
         pdfBuffs.push(Buffer.from(file))
       }
