@@ -2,9 +2,11 @@ import { makeStyles } from '@mui/styles'
 
 export const useHomeStyles = makeStyles(() => ({
   listItem: {
-    color: '#656363',
+    margin: '8px 0',
+    padding: '10px 20px',
+    color: '#505050',
     textDecoration: 'none',
-    backgroundColor: '#dfe5ff',
-    borderRadius: 1.5,
+    backgroundColor: '#eaedff',
+    borderRadius: '5px!important',
   },
 }))

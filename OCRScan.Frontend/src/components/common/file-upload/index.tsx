@@ -32,12 +32,14 @@ const CustomBox = styled(Box)({
 interface Props {
   limit: number
   multiple: boolean
+  fileType?: 'img' | 'pdf'
   name: string
 }
 
 export const FileUpload: FC<Props> = ({
   limit,
   multiple,
+  fileType,
   name,
 }: Props): ReactElement => {
   const {
@@ -45,10 +47,23 @@ export const FileUpload: FC<Props> = ({
     formState: { isSubmitting, errors },
   } = useFormContext()
 
+  const inputFileAccept = () => {
+    switch (fileType) {
+      case 'img':
+        return 'image/jpg, image/png, image/jpeg'
+      case 'pdf':
+        return 'application/pdf'
+    }
+  }
+
   const { field } = useController({ name, control })
   const [singleFile, setSingleFile] = useState<File[]>([])
   const [fileList, setFileList] = useState<File[]>([])
   const wrapperRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    console.log(errors)
+  }, [errors])
 
   const onDragEnter = () => wrapperRef.current?.classList.add('dragover')
   const onDragLeave = () => wrapperRef.current?.classList.remove('dragover')
@@ -134,7 +149,11 @@ export const FileUpload: FC<Props> = ({
         >
           <Stack justifyContent="center" sx={{ p: 1, textAlign: 'center' }}>
             <Typography sx={{ color: '#ccc' }}>
-              {limit > 1 ? 'Загрузите изображения' : 'Загрузите изображение'}
+              {fileType === 'pdf'
+                ? 'Загрузите PDF-документ'
+                : limit > 1
+                ? 'Загрузите изображения'
+                : 'Загрузите изображение'}
             </Typography>
             <div>
               <Image
@@ -148,7 +167,7 @@ export const FileUpload: FC<Props> = ({
               <strong>Поддерживаемые типы</strong>
             </Typography>
             <Typography variant="body2" component="span">
-              JPG, JPEG, PNG
+              {fileType === 'img' ? 'JPG, JPEG, PNG' : 'PDF'}
             </Typography>
           </Stack>
           <Controller
@@ -163,7 +182,7 @@ export const FileUpload: FC<Props> = ({
                 ref={ref}
                 onChange={onFileDrop}
                 multiple={multiple}
-                accept="image/jpg, image/png, image/jpeg"
+                accept={inputFileAccept()}
                 style={{
                   opacity: 0,
                   position: 'absolute',
@@ -242,4 +261,8 @@ export const FileUpload: FC<Props> = ({
       ) : null}
     </>
   )
+}
+
+FileUpload.defaultProps = {
+  fileType: 'img',
 }

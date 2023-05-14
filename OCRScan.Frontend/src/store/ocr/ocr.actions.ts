@@ -8,3 +8,11 @@ export const imgToPdf = createAsyncThunk(
     return response.data
   }
 )
+
+export const makeSearchablePdf = createAsyncThunk(
+  'ocr/makeSearchablePdf',
+  async (payload: FormData) => {
+    const response = await endpoints.ocr.makeSearchablePdf(payload)
+    return response.data
+  }
+)

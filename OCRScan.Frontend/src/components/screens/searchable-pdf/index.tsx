@@ -2,15 +2,15 @@ import React, { FC, ReactElement } from 'react'
 import { useAppSelector, useAppDispatch } from '@/hooks/redux'
 import { Box, Button, CircularProgress, Container, Grid } from '@mui/material'
 import { FileUpload } from '@/components/common/file-upload'
-import { TypeOf, object, z, array } from 'zod'
+import { TypeOf, object, z } from 'zod'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SelectLanguages } from '@/components/common/select-laguages'
-import { imgToPdf } from '@/store/ocr/ocr.actions'
+import { makeSearchablePdf } from '@/store/ocr/ocr.actions'
 import { CheckboxField } from '@/components/common/checkbox-field'
 
 const imageUploadSchema = object({
-  images: array(z.instanceof(File)),
+  pdfDocument: z.instanceof(File),
   languages: z
     .object({
       code: z.string(),
@@ -23,7 +23,7 @@ const imageUploadSchema = object({
 
 type IUploadImage = TypeOf<typeof imageUploadSchema>
 
-const ImgToPdf: FC = (): ReactElement => {
+const SearchablePdf: FC = (): ReactElement => {
   const methods = useForm<IUploadImage>({
     resolver: zodResolver(imageUploadSchema),
     defaultValues: {
@@ -36,12 +36,9 @@ const ImgToPdf: FC = (): ReactElement => {
 
   const onSubmit: SubmitHandler<IUploadImage> = (values: IUploadImage) => {
     const formData = new FormData()
+    formData.append('pdf', values.pdfDocument)
 
-    if (values.images.length > 0) {
-      values.images.forEach((el) => formData.append('img', el))
-    }
-
-    dispatch(imgToPdf(formData))
+    dispatch(makeSearchablePdf(formData))
   }
 
   return (
@@ -51,7 +48,12 @@ const ImgToPdf: FC = (): ReactElement => {
           <Box component="form" onSubmit={methods.handleSubmit(onSubmit)}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
-                <FileUpload name="images" multiple={true} limit={10} />
+                <FileUpload
+                  name="pdfDocument"
+                  multiple={false}
+                  limit={1}
+                  fileType="pdf"
+                />
               </Grid>
               <Grid item xs={12} md={6}>
                 <SelectLanguages />
@@ -83,4 +85,4 @@ const ImgToPdf: FC = (): ReactElement => {
   )
 }
 
-export default ImgToPdf
+export default SearchablePdf

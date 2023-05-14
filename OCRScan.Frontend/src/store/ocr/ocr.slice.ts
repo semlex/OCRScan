@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { imgToPdf } from '@/store/ocr/ocr.actions'
+import { imgToPdf, makeSearchablePdf } from '@/store/ocr/ocr.actions'
 import { saveAs } from 'file-saver'
 
 const initialState = {
@@ -20,6 +20,17 @@ export const ocrSlice = createSlice({
         saveAs(payload, 'result.pdf')
       })
       .addCase(imgToPdf.rejected, (state) => {
+        state.isLoading = false
+      })
+    builder
+      .addCase(makeSearchablePdf.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(makeSearchablePdf.fulfilled, (state, { payload }) => {
+        state.isLoading = false
+        saveAs(payload, 'result.pdf')
+      })
+      .addCase(makeSearchablePdf.rejected, (state) => {
         state.isLoading = false
       })
   },
