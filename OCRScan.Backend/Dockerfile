@@ -1,15 +1,15 @@
 FROM node:18-alpine
-FROM urielch/opencv-nodejs
+#FROM urielch/opencv-nodejs
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm remove @u4/opencv4nodejs
+#RUN npm remove @u4/opencv4nodejs
 
 RUN npm install
 
-RUN npm link @u4/opencv4nodejs
+#RUN npm link @u4/opencv4nodejs
 
 COPY . .
 

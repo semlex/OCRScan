@@ -10,7 +10,7 @@ import {
 import { Request, Response } from 'express'
 import { OcrService } from './ocr.service'
 import { FileService } from '../file/file.service'
-import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express'
 
 @Controller('ocr')
 export class OcrController {
