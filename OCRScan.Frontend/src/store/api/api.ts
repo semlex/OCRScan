@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 
 export const api = createApi({
   reducerPath: 'api',
+  tagTypes: ['Language'],
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NODE_ENV === 'production'
