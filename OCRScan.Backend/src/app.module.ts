@@ -8,6 +8,8 @@ import { AutomapperModule } from '@automapper/nestjs'
 import { sequelize } from '@automapper/sequelize'
 import { OcrModule } from './ocr/ocr.module'
 import { FileModule } from './file/file.module'
+import { ImageModule } from './image/image.module';
+import { LanguageModule } from './language/language.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { FileModule } from './file/file.module'
     AuthModule,
     OcrModule,
     FileModule,
+    ImageModule,
+    LanguageModule,
   ],
   controllers: [],
   providers: [],
