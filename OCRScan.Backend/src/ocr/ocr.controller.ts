@@ -4,12 +4,13 @@ import {
   Req,
   Res,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common'
 import { Request, Response } from 'express'
 import { OcrService } from './ocr.service'
 import { FileService } from '../file/file.service'
-import { FileInterceptor } from '@nestjs/platform-express'
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 
 @Controller('ocr')
 export class OcrController {
@@ -19,21 +20,25 @@ export class OcrController {
   ) {}
 
   @Post('/imgToPdf')
-  @UseInterceptors(FileInterceptor('img'))
+  @UseInterceptors(FilesInterceptor('img'))
   async imgToPdf(
     @Req() req: Request,
-    @UploadedFile() img: Express.Multer.File,
+    @UploadedFiles() img: Array<Express.Multer.File>,
     @Res() res: Response,
   ) {
-    const buffer = await this.ocrService.imgToPdf(
-      img.buffer,
+    console.log(img)
+    const buffers = await this.ocrService.imgToPdf(
+      img.map((img) => img.buffer),
       JSON.parse(req.cookies['languages']),
     )
+
+    const buffer = await this.fileService.mergePdf(buffers)
+
     const stream = this.fileService.getReadableStream(buffer)
 
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Length': buffer.length,
+      'Content-Length': buffer.byteLength,
     })
 
     stream.pipe(res)

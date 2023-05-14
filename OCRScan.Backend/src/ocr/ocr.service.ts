@@ -6,24 +6,29 @@ import { convert } from 'pdf-img-convert'
 @Injectable()
 export class OcrService {
   constructor(private readonly imageService: ImageService) {}
-  async imgToPdf(imgBuffer: Buffer, languages: string[]): Promise<Buffer> {
+  async imgToPdf(imgBuffers: Buffer[], languages: string[]): Promise<Buffer[]> {
     const worker = await createWorker({
       logger: (m) => console.log(m),
     })
 
-    const processedImgBuff = await this.imageService.preprocessImage(imgBuffer)
-
     let file
+    const pdfBuffs: Buffer[] = []
 
     await (async () => {
-      await worker.loadLanguage(languages.join('+'))
-      await worker.initialize(languages.join('+'))
-      await worker.recognize(processedImgBuff)
-      file = (await worker.getPDF('result')).data
+      for (const imgBuffer of imgBuffers) {
+        const processedImgBuff = await this.imageService.preprocessImage(
+          imgBuffer,
+        )
+        await worker.loadLanguage(languages.join('+'))
+        await worker.initialize(languages.join('+'))
+        await worker.recognize(processedImgBuff)
+        file = (await worker.getPDF('result')).data
+        pdfBuffs.push(Buffer.from(file))
+      }
       await worker.terminate()
     })()
 
-    return Buffer.from(file)
+    return pdfBuffs
   }
 
   async imgToText(imgBuffer: Buffer, languages: string[]): Promise<string> {
