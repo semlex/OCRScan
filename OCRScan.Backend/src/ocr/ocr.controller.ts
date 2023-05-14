@@ -1,10 +1,10 @@
 import {
   Controller,
   Post,
+  Req,
   Res,
   UploadedFile,
   UseInterceptors,
-  Req,
 } from '@nestjs/common'
 import { Request, Response } from 'express'
 import { OcrService } from './ocr.service'
@@ -31,11 +31,48 @@ export class OcrController {
     )
     const stream = this.fileService.getReadableStream(buffer)
 
-    console.log(req.cookies)
-
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Length': buffer.length,
+    })
+
+    stream.pipe(res)
+  }
+
+  @Post('/imgToText')
+  @UseInterceptors(FileInterceptor('img'))
+  async imgToText(
+    @Req() req: Request,
+    @UploadedFile() img: Express.Multer.File,
+  ) {
+    const text = await this.ocrService.imgToText(
+      img.buffer,
+      JSON.parse(req.cookies['languages']),
+    )
+    return {
+      text,
+    }
+  }
+
+  @Post('/makeSearchablePdf')
+  @UseInterceptors(FileInterceptor('pdf'))
+  async makeSearchablePdf(
+    @Req() req: Request,
+    @UploadedFile() pdf: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    const buffers = await this.ocrService.makeReadablePdf(
+      pdf.buffer,
+      JSON.parse(req.cookies['languages']),
+    )
+
+    const buffer = await this.fileService.mergePdf(buffers)
+
+    const stream = this.fileService.getReadableStream(buffer)
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Length': buffer.byteLength,
     })
 
     stream.pipe(res)

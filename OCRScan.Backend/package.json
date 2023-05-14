@@ -35,12 +35,15 @@
     "class-transformer": "^0.5.1",
     "cookie-parser": "^1.4.6",
     "passport-jwt": "^4.0.1",
+    "pdf-img-convert": "^1.2.1",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.9.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "sequelize": "^6.28.0",
     "sequelize-typescript": "^2.1.5",
+    "sharp": "^0.32.1",
     "tesseract.js": "^4.0.2"
   },
   "devDependencies": {

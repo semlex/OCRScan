@@ -10,7 +10,9 @@ export class LanguageService {
   ) {}
 
   async getAll() {
-    return await this.languageRepository.findAll()
+    return await this.languageRepository.findAll({
+      order: [['name', 'ASC']],
+    })
   }
 
   async getCount() {
