@@ -10,8 +10,6 @@ export class ImageService {
   }
 
   async preprocessImage(imgBuffer: Buffer): Promise<Buffer> {
-    const cleanedImgBuff = await this.cleanImage(imgBuffer)
-
-    return cleanedImgBuff
+    return await this.cleanImage(imgBuffer)
   }
 }
