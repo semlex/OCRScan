@@ -1,6 +1,7 @@
 import React, { FC, ReactElement } from 'react'
 import { AppBar, Toolbar, Typography } from '@mui/material'
 import { DocumentScanner } from '@mui/icons-material'
+import Link from 'next/link'
 
 export const Header: FC = (): ReactElement => {
   return (
@@ -17,29 +18,11 @@ export const Header: FC = (): ReactElement => {
             color: 'inherit',
             textDecoration: 'none',
           }}
+          component={Link}
+          href="/"
         >
           OCRScan
         </Typography>
-
-        {/*<Adb sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />*/}
-        {/*<Typography*/}
-        {/*  variant="h5"*/}
-        {/*  noWrap*/}
-        {/*  component="a"*/}
-        {/*  href=""*/}
-        {/*  sx={{*/}
-        {/*    mr: 2,*/}
-        {/*    display: { xs: 'flex', md: 'none' },*/}
-        {/*    flexGrow: 1,*/}
-        {/*    fontFamily: 'monospace',*/}
-        {/*    fontWeight: 700,*/}
-        {/*    letterSpacing: '.3rem',*/}
-        {/*    color: 'inherit',*/}
-        {/*    textDecoration: 'none',*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  LOGO*/}
-        {/*</Typography>*/}
       </Toolbar>
     </AppBar>
   )
